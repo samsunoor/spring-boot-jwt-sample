@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response,
             FilterChain chain,
             Authentication authResult
-    ) throws IOException, ServletException {
+    ) {
         final var username = ((User) authResult.getPrincipal()).getUsername();
         final var expireDate = new Date(System.currentTimeMillis() + 5000L);
         final var algorithm = Algorithm.HMAC512(SecurityConstant.AUTH_SECRET);
