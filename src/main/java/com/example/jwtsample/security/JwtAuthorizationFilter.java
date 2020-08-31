@@ -12,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -42,7 +42,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .verify(token)
                     .getSubject();
 
-            if (subject != null) return new UsernamePasswordAuthenticationToken(subject, null, new ArrayList<>());
+            if (subject != null) return new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
 
             return null;
         }

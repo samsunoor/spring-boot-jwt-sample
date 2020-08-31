@@ -14,8 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -34,10 +33,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             new UsernamePasswordAuthenticationToken(
                                     userEntity.getUsername(),
                                     userEntity.getPassword(),
-                                    new ArrayList<>()
+                                    Collections.emptyList()
                             )
                     );
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -50,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authResult
     ) {
         final var username = ((User) authResult.getPrincipal()).getUsername();
-        final var expireDate = new Date(System.currentTimeMillis() + 5000L);
+        final var expireDate = new Date(System.currentTimeMillis() + 864_000_000L);
         final var algorithm = Algorithm.HMAC512(SecurityConstant.AUTH_SECRET);
         final var token = JWT.create()
                 .withSubject(username)

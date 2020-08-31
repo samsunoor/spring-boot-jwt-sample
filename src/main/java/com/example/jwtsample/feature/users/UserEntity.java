@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(
+        name = "user_entity",
+        indexes = {@Index(name = "index_username", columnList = "username")}
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,8 +19,11 @@ import javax.persistence.Id;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
 
     public UserEntity(String username, String password) {
