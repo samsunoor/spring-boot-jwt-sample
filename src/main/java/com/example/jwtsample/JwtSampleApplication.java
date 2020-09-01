@@ -11,9 +11,4 @@ public class JwtSampleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JwtSampleApplication.class, args);
 	}
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 }

@@ -1,7 +1,7 @@
-package com.example.jwtsample.security;
+package com.example.jwtsample.security.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.example.jwtsample.security.SecurityConstant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +16,12 @@ import java.util.Collections;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtSpecification jwtSpecification) {
         super(authenticationManager);
+        this.jwtSpecification = jwtSpecification;
     }
+
+    private final JwtSpecification jwtSpecification;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -33,12 +36,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) throws JWTVerificationException {
         final var headerValue = request.getHeader(SecurityConstant.AUTH_HEADER);
         if (headerValue != null) {
             final var token = headerValue.replace(SecurityConstant.BEARER_PREFIX, "");
-            final var subject = JWT.require(Algorithm.HMAC512(SecurityConstant.AUTH_SECRET))
-                    .build()
+            final var subject = jwtSpecification.getJwtVerifier()
                     .verify(token)
                     .getSubject();
 
